@@ -1,16 +1,86 @@
-# React + Vite
+# 🎬 Movie Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Fullstack **Movie Management Platform** berbasis **JavaScript** yang memungkinkan **Admin** mengelola data **Movies** dan **Users** dengan sistem **JWT Authentication**, **Role-Based Access Control**, serta **Admin Dashboard modern**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+### 🔐 Authentication & Authorization
+- Login menggunakan **JSON Web Token (JWT)**
+- Middleware **verifyToken**
+- Middleware **isAdmin** (Admin Only Access)
+- Proteksi API menggunakan **Bearer Token**
+- Role management: **admin** & **user**
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+---
 
-## Expanding the ESLint configuration
+### 🎥 Movie Management (CRUD)
+- ➕ Create Movie  
+- 📄 Read Movie List  
+- ✏️ Update Movie  
+- 🗑️ Delete Movie  
+- 🔍 Search Movie berdasarkan **Title** / **Director**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+### 👥 User Management (Admin Only)
+- 👀 View semua user
+- ✏️ Update user (**name, email, role**)
+- 🗑️ Delete user
+- 🔒 Akses khusus **Admin**
+
+---
+
+### 📊 Admin Dashboard
+- 📈 Total Movies
+- 👤 Total Users
+- 📋 Table Management (Movies & Users)
+- 🪟 Modal Edit User & Movie
+- 🎨 UI Modern menggunakan **TailwindCSS**
+
+---
+
+## 🧱 Tech Stack
+
+### 🖥️ Frontend
+- ⚛️ **React.js**
+- 🔄 **Axios**
+- 🎨 **TailwindCSS**
+- 🖼️ **Lucide Icons**
+- 🔐 JWT (localStorage)
+
+---
+
+### 🛠️ Backend
+- 🟢 **Node.js**
+- 🚀 **Express.js**
+- 🗄️ **MySQL**
+- 🔐 **JSON Web Token (JWT)**
+- 🧩 Authentication & Authorization Middleware
+
+---
+
+## 📂 Project Structure
+
+```bash
+movie-management-platform
+├── backend
+│   ├── controllers
+│   ├── middleware
+│   │   ├── verifyToken.js
+│   │   └── isAdmin.js
+│   ├── routes
+│   ├── models
+│   ├── config
+│   └── server.js
+│
+├── frontend
+│   ├── src
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── services
+│   │   └── App.jsx
+│   └── main.jsx
+│
+└── README.md
