@@ -82,7 +82,7 @@ export default function Footers({ genres = [], onSelectGenre }) {
                 </span>
               </li>
 
-              {/* 🔥 HISTORY */}
+              {/* HISTORY */}
               <li className="group">
                 <Link
                   to="/history"

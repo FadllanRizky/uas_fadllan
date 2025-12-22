@@ -41,3 +41,6 @@ router.delete("/users/:id", verifyToken, isAdmin, (req, res) => {
 });
 
 module.exports = router;
+
+
+// CRUD untuk bagian Users yang cuman bisa di lakukan sama admin

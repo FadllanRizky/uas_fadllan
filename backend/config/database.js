@@ -16,3 +16,6 @@ db.connect((err) => {
 });
 
 module.exports = db;
+
+
+// Untuk Connect ke Database

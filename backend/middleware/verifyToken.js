@@ -20,3 +20,5 @@ module.exports = (req, res, next) => {
     return res.status(401).json({ msg: "Invalid token" });
   }
 };
+
+// untuk menerima token atau mengganti bahasa database dengan bahasa kita

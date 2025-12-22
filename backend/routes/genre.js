@@ -10,3 +10,5 @@ router.get("/", (req, res) => {
 });
 
 module.exports = router;
+
+// untuk nampilin semua data movie dari database

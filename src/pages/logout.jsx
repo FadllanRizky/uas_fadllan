@@ -6,7 +6,7 @@ export default function Logout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    clearAuth(); // hapus token & role
+    clearAuth(); 
     navigate("/login", { replace: true });
   }, [navigate]);
 

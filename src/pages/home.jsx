@@ -19,7 +19,7 @@ export default function Home({
   const [search, setSearch] = useState("");
   const [topRated, setTopRated] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState('grid');
   const [showGenreDropdown, setShowGenreDropdown] = useState(false);
 
   const [movieStats, setMovieStats] = useState(() => {

@@ -1,20 +1,14 @@
 @import "tailwindcss";
 
-/* =========================
-   CUSTOM UTILITIES
-========================= */
 @layer utilities {
-  /* Hide on mobile */
   .hide-on-mobile {
     @apply hidden sm:block;
   }
 
-  /* Hide on desktop */
   .hide-on-desktop {
     @apply sm:hidden;
   }
 
-  /* Touch-friendly buttons */
   .touch-button {
     min-height: 44px;
     min-width: 44px;
@@ -23,7 +17,6 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Safe area padding for iOS */
   .safe-padding {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
@@ -31,27 +24,19 @@
     padding-right: env(safe-area-inset-right);
   }
 
-  /* Responsive Images */
   .responsive-img {
     @apply w-full h-auto max-w-full;
   }
 
-  /* Modal mobile */
   .modal-mobile {
     @apply max-h-[90vh] overflow-y-auto mx-2;
   }
 }
 
-/* =========================
-   GLOBAL STYLES
-========================= */
-
-/* Smooth transitions */
 * {
   @apply transition-colors duration-200;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -70,7 +55,6 @@
   background: linear-gradient(to bottom, #ef4444, #991b1b);
 }
 
-/* Truncate text */
 .truncate-2-lines {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -85,9 +69,6 @@
   overflow: hidden;
 }
 
-/* =========================
-   RESPONSIVE (NO @apply)
-========================= */
 
 @media (max-width: 640px) {
   html {
@@ -121,9 +102,6 @@
   }
 }
 
-/* =========================
-   ANIMATIONS
-========================= */
 
 @keyframes fadeIn {
   from {
@@ -153,9 +131,6 @@
   animation: slideIn 0.3s ease-out forwards;
 }
 
-/* =========================
-   SKELETON LOADING
-========================= */
 
 .skeleton {
   background: linear-gradient(

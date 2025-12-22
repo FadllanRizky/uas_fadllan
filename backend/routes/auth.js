@@ -81,3 +81,5 @@ router.post("/login", (req, res) => {
 });
 
 module.exports = router;
+
+// data awal untuk masuk ke aplikasi

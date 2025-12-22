@@ -19,3 +19,5 @@ router.get("/", verifyToken, (req, res) => {
 });
 
 module.exports = router;
+
+//akses data profil admin atau pengguna

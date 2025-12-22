@@ -150,3 +150,5 @@ router.delete("/:id", (req, res) => {
 });
 
 module.exports = router;
+
+// bagian CRUD untuk movie
