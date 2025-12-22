@@ -1,15 +1,68 @@
-export default function MovieProduct({ movie, onClick }) {
+export default function MovieProduct({ movie, onClick, viewMode = 'grid', isMobile = false }) {
+  if (viewMode === 'list') {
+    return (
+      <div
+        onClick={onClick}
+        className="group cursor-pointer flex items-stretch bg-gradient-to-b from-gray-900/50 to-gray-900/20 backdrop-blur-sm 
+                 rounded-xl sm:rounded-2xl overflow-hidden border border-gray-800/50 hover:border-red-500/30
+                 transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/10"
+      >
+        {/* MOVIE POSTER */}
+        <div className="relative w-24 sm:w-32 md:w-40 aspect-[2/3] flex-shrink-0 overflow-hidden">
+          <img
+            src={movie.poster_url}
+            alt={movie.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+          
+          {/* RATING BADGE */}
+          <div className="absolute top-2 right-2 bg-gradient-to-br from-amber-600 to-amber-800 px-2 py-1 rounded-lg shadow-lg">
+            <div className="flex items-center gap-0.5">
+              <span className="text-white font-bold text-xs">★</span>
+              <span className="text-white font-bold text-xs">{movie.rating}/10</span>
+            </div>
+          </div>
+        </div>
+
+        {/* MOVIE INFO */}
+        <div className="flex-1 p-3 sm:p-4 md:p-5 flex flex-col">
+          <h2 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1 sm:mb-2 group-hover:text-red-400 transition-colors line-clamp-1">
+            {movie.title}
+          </h2>
+
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <span className="text-gray-400 text-xs sm:text-sm px-2 py-1 bg-gray-900/50 rounded-full border border-gray-800">
+              {movie.release_year}
+            </span>
+            <span className="text-gray-400 text-xs sm:text-sm">{movie.duration} min</span>
+          </div>
+
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed flex-1 line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-4">
+            {movie.description || "No description available."}
+          </p>
+
+          <div className="flex items-center justify-between mt-auto">
+            <span className="text-gray-500 text-xs">Click for details →</span>
+            <div className="flex items-center gap-1">
+              <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse"></div>
+              <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse delay-100"></div>
+              <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse delay-200"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // GRID VIEW (Default)
   return (
     <div
       onClick={onClick}
-      className="group cursor-pointer relative bg-gradient-to-b from-gray-900 to-black 
-                 rounded-2xl overflow-hidden shadow-2xl hover:shadow-red-500/20
-                 transition-all duration-500 transform hover:-translate-y-2
-                 border border-gray-800/30 hover:border-red-500/30"
+      className="group cursor-pointer relative bg-gradient-to-b from-gray-900/50 to-gray-900/20 backdrop-blur-sm 
+               rounded-xl sm:rounded-2xl overflow-hidden border border-gray-800/50 hover:border-red-500/30
+               transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-red-500/10"
     >
-      {/* GRADIENT OVERLAY */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
-      
       {/* MOVIE POSTER */}
       <div className="relative aspect-[2/3] overflow-hidden">
         <img
@@ -18,12 +71,14 @@ export default function MovieProduct({ movie, onClick }) {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         
+        {/* GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+        
         {/* RATING BADGE */}
-        <div className="absolute top-4 right-4 z-20 bg-gradient-to-br from-amber-600 to-amber-800 
-                      px-3 py-1.5 rounded-lg shadow-lg shadow-amber-900/50">
-          <div className="flex items-center gap-1">
-            <span className="text-white font-black text-lg">★</span>
-            <span className="text-white font-bold">{movie.rating}/10</span>
+        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
+          <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-br from-amber-600 to-amber-800 px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg shadow-lg">
+            <span className="text-white font-bold text-xs sm:text-sm">★</span>
+            <span className="text-white font-bold text-xs sm:text-sm">{movie.rating}/10</span>
           </div>
         </div>
         
@@ -31,40 +86,40 @@ export default function MovieProduct({ movie, onClick }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent 
                       opacity-0 group-hover:opacity-100 transition-opacity duration-300
                       flex items-center justify-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full 
+          <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full 
                         flex items-center justify-center transform scale-90 group-hover:scale-100 
                         transition-transform duration-300 shadow-2xl">
-            <div className="text-white text-2xl">▶</div>
+            <div className="text-white text-lg sm:text-xl md:text-2xl">▶</div>
           </div>
         </div>
       </div>
 
       {/* MOVIE INFO */}
-      <div className="relative z-20 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-        <h2 className="text-xl font-black text-white mb-2 line-clamp-1 group-hover:text-red-400 transition-colors">
+      <div className="relative z-20 p-3 sm:p-4 md:p-5">
+        <h2 className="text-sm sm:text-base md:text-lg font-bold text-white mb-1 sm:mb-2 line-clamp-1 group-hover:text-red-400 transition-colors">
           {movie.title}
         </h2>
 
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-gray-400 text-sm font-medium px-3 py-1 bg-gray-900/50 rounded-full border border-gray-800">
+        <div className="flex items-center justify-between mb-2 sm:mb-3">
+          <span className="text-gray-400 text-xs sm:text-sm px-2 py-1 bg-gray-900/50 rounded-full border border-gray-800">
             {movie.release_year}
           </span>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-xs text-gray-400">HD</span>
+          <div className="flex items-center gap-1">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span className="text-gray-400 text-xs">HD</span>
           </div>
         </div>
 
-        <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4">
+        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-2 mb-3 sm:mb-4">
           {movie.description || "No description available."}
         </p>
 
         {/* HOVER ACTION BAR */}
         <div className="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 
-                      transition-all duration-300 pt-4 border-t border-gray-800/50">
+                      transition-all duration-300 pt-2 sm:pt-3 border-t border-gray-800/50">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500 font-medium">Click for details</span>
-            <div className="flex items-center gap-1">
+            <span className="text-gray-500 text-xs">Click for details</span>
+            <div className="flex items-center gap-0.5">
               <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse"></div>
               <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse delay-100"></div>
               <div className="w-1 h-1 bg-red-500 rounded-full animate-pulse delay-200"></div>

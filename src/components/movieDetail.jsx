@@ -1,5 +1,5 @@
 import { X, Heart, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /* HELPER YOUTUBE */
 const getEmbedUrl = (url) => {
@@ -16,39 +16,60 @@ const getEmbedUrl = (url) => {
   return `https://www.youtube.com/embed/${id}`;
 };
 
-export default function MovieDetailModal({
-  movie,
-  stats,
-  setMovieStats,
-  onClose
-}) {
+export default function MovieDetailModal({ movie, onClose }) {
+  const STORAGE_KEY = `movie_stats_${movie.id}`;
+
   const [text, setText] = useState("");
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
 
-  const likes = stats?.likes || 0;
-  const comments = stats?.comments || [];
+  /* LOAD DATA SAAT MODAL BUKA */
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (saved) {
+      setLikes(saved.likes || 0);
+      setComments(saved.comments || []);
+    }
 
+    saveToHistory();
+  }, []);
+
+  /* SIMPAN KE LOCALSTORAGE */
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ likes, comments })
+    );
+  }, [likes, comments]);
+
+  /* LIKE */
   const handleLike = () => {
-    setMovieStats((prev) => ({
-      ...prev,
-      [movie.id]: {
-        likes: likes + 1,
-        comments
-      }
-    }));
+    setLikes((prev) => prev + 1);
   };
 
+  /* COMMENT */
   const handleComment = () => {
     if (!text.trim()) return;
-
-    setMovieStats((prev) => ({
-      ...prev,
-      [movie.id]: {
-        likes,
-        comments: [...comments, text]
-      }
-    }));
-
+    setComments((prev) => [...prev, text]);
     setText("");
+  };
+
+  /* WATCH HISTORY */
+  const saveToHistory = () => {
+    const history =
+      JSON.parse(localStorage.getItem("watch_history")) || [];
+
+    const exists = history.find((h) => h.id === movie.id);
+    if (exists) return;
+
+    history.unshift({
+      id: movie.id,
+      title: movie.title,
+      poster_url: movie.poster_url,
+      watchedAt: new Date().toISOString(),
+    });
+
+    localStorage.setItem("watch_history", JSON.stringify(history));
   };
 
   return (
@@ -84,6 +105,7 @@ export default function MovieDetailModal({
             {movie.description}
           </p>
 
+          {/* LIKE & COMMENT */}
           <div className="flex items-center gap-6 mb-6">
             <button
               onClick={handleLike}
@@ -97,12 +119,15 @@ export default function MovieDetailModal({
             </div>
           </div>
 
+          {/* COMMENTS */}
           <div className="border-t border-zinc-800 pt-4">
             <h3 className="font-semibold mb-2">Comments</h3>
 
             <div className="space-y-2 max-h-32 overflow-y-auto mb-3">
               {comments.length === 0 && (
-                <p className="text-gray-500 text-sm">No comments yet</p>
+                <p className="text-gray-500 text-sm">
+                  No comments yet
+                </p>
               )}
               {comments.map((c, i) => (
                 <p key={i} className="text-sm text-gray-300">

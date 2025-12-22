@@ -8,6 +8,9 @@ import {
   Filter,
   Sparkles
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { History } from "lucide-react";
+
 
 export default function Footers({ genres = [], onSelectGenre }) {
   const [openGenre, setOpenGenre] = useState(false);
@@ -17,7 +20,7 @@ export default function Footers({ genres = [], onSelectGenre }) {
       {/* FOOTER */}
       <footer className="bg-gradient-to-t from-gray-950 via-gray-950 to-black border-t border-gray-800/30 text-gray-400">
         <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-4 gap-12">
-          
+
           {/* BRAND */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-4 mb-6">
@@ -32,7 +35,7 @@ export default function Footers({ genres = [], onSelectGenre }) {
               </div>
             </div>
             <p className="text-gray-400 leading-relaxed max-w-md">
-              Platform streaming film modern dengan koleksi terbaik dalam kualitas 4K. 
+              Platform streaming film modern dengan koleksi terbaik dalam kualitas 4K.
               Nikmati pengalaman menonton premium tanpa batas.
             </p>
             <div className="flex items-center gap-2 mt-4 text-amber-500">
@@ -48,19 +51,28 @@ export default function Footers({ genres = [], onSelectGenre }) {
               Navigation
             </h3>
             <ul className="space-y-4">
-              <li className="group cursor-pointer">
-                <span className="text-gray-400 group-hover:text-white transition-colors flex items-center gap-3">
+
+              <li className="group">
+                <Link
+                  to="/"
+                  className="text-gray-400 group-hover:text-white transition-colors flex items-center gap-3"
+                >
                   <div className="w-1 h-1 bg-gray-600 rounded-full group-hover:bg-red-500"></div>
                   Home
-                </span>
+                </Link>
               </li>
-              <li className="group cursor-pointer">
-                <span className="text-gray-400 group-hover:text-white transition-colors flex items-center gap-3">
+
+              <li className="group">
+                <Link
+                  to="/"
+                  className="text-gray-400 group-hover:text-white transition-colors flex items-center gap-3"
+                >
                   <div className="w-1 h-1 bg-gray-600 rounded-full group-hover:bg-red-500"></div>
                   Movies
-                </span>
+                </Link>
               </li>
-              <li 
+
+              <li
                 onClick={() => setOpenGenre(true)}
                 className="group cursor-pointer"
               >
@@ -69,12 +81,19 @@ export default function Footers({ genres = [], onSelectGenre }) {
                   <Filter size={16} /> Filter Genre
                 </span>
               </li>
-              <li className="group cursor-pointer">
-                <span className="text-gray-400 group-hover:text-white transition-colors flex items-center gap-3">
+
+              {/* 🔥 HISTORY */}
+              <li className="group">
+                <Link
+                  to="/history"
+                  className="text-gray-400 group-hover:text-white transition-colors flex items-center gap-3"
+                >
                   <div className="w-1 h-1 bg-gray-600 rounded-full group-hover:bg-red-500"></div>
-                  About
-                </span>
+                  <History size={16} />
+                  Watch History
+                </Link>
               </li>
+
             </ul>
           </div>
 
@@ -101,7 +120,7 @@ export default function Footers({ genres = [], onSelectGenre }) {
                 <Mail className="w-5 h-5 text-gray-400 hover:text-white transition-colors" />
               </a>
             </div>
-            
+
             <div className="mt-8 p-4 bg-gradient-to-r from-gray-900/50 to-gray-900/20 border border-gray-800/30 rounded-xl">
               <p className="text-xs text-gray-500">Need help?</p>
               <p className="text-white font-medium">support@moviembur.com</p>
