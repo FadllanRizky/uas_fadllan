@@ -1,14 +1,67 @@
-import { useEffect, useState } from "react";
-import { History, ArrowLeft, Clock, Calendar, Star, Film } from "lucide-react";
+import { History, ArrowLeft, Clock, Calendar, Star, Film, RefreshCw, Trash2, Play } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLocalStorageAutoRefresh } from "../hooks/useLocalStorageAutoRefresh";
 
 export default function WatchList() {
-  const [history, setHistory] = useState([]);
+  const { 
+    value: history, 
+    refresh, 
+    updateStorage,
+    removeFromStorage,
+    lastUpdate 
+  } = useLocalStorageAutoRefresh("watch_history", []);
 
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("watch_history")) || [];
-    setHistory(data);
-  }, []);
+  // Manual refresh function
+  const handleRefresh = () => {
+    refresh();
+  };
+
+  // Remove single movie
+  const handleRemoveMovie = (movieId) => {
+    if (window.confirm("Remove this movie from history?")) {
+      const updatedHistory = history.filter(movie => movie.id !== movieId);
+      updateStorage(updatedHistory);
+    }
+  };
+
+  // Clear all history
+  const handleClearHistory = () => {
+    if (window.confirm("Are you sure you want to clear all watch history?")) {
+      removeFromStorage();
+    }
+  };
+
+  // Watch again (simulate)
+  const handleWatchAgain = (movie) => {
+    // Update watch time to now
+    updateStorage(prev => {
+      return prev.map(item => 
+        item.id === movie.id 
+          ? { ...item, watchedAt: new Date().toISOString() }
+          : item
+      );
+    });
+    
+    alert(`Playing ${movie.title} again!`);
+    // You can navigate to movie detail page here
+    // navigate(`/movie/${movie.id}`);
+  };
+
+  // Format last update time
+  const formatLastUpdate = () => {
+    const now = new Date();
+    const updateTime = new Date(lastUpdate);
+    const diffSeconds = Math.floor((now - updateTime) / 1000);
+    
+    if (diffSeconds < 60) return 'just now';
+    if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} minutes ago`;
+    if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} hours ago`;
+    return updateTime.toLocaleDateString();
+  };
+
+  // Calculate stats
+  const totalHours = Math.round(history.reduce((acc, movie) => acc + (movie.duration || 0), 0) / 60);
+  const lastWatched = history.length > 0 ? history[0] : null;
 
   if (history.length === 0) {
     return (
@@ -65,13 +118,26 @@ export default function WatchList() {
 
         {/* HEADER */}
         <div className="mb-12">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8 group"
-          >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Home</span>
-          </Link>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
+            >
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              <span>Back to Home</span>
+            </Link>
+
+            {/* REFRESH BUTTON */}
+            <button
+              onClick={handleRefresh}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-900/20 to-blue-900/10 
+                       border border-blue-800/30 rounded-xl hover:border-blue-700/50 hover:bg-blue-900/30 
+                       transition-all duration-300"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span className="text-sm">Refresh</span>
+            </button>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-4">
@@ -80,7 +146,9 @@ export default function WatchList() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">Watch History</h1>
-                <p className="text-gray-400">Your cinematic journey</p>
+                <p className="text-gray-400">
+                  Your cinematic journey • Updated {formatLastUpdate()}
+                </p>
               </div>
             </div>
 
@@ -92,7 +160,7 @@ export default function WatchList() {
               <div className="px-4 py-2 bg-gradient-to-r from-blue-900/20 to-blue-900/10 border border-blue-800/30 rounded-xl">
                 <div className="text-sm text-gray-400">Hours</div>
                 <div className="text-xl font-bold text-blue-400">
-                  {Math.round(history.reduce((acc, movie) => acc + (movie.duration || 0), 0) / 60)}
+                  {totalHours}
                 </div>
               </div>
             </div>
@@ -103,7 +171,7 @@ export default function WatchList() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {history.map((movie) => (
             <div
-              key={movie.id}
+              key={`${movie.id}-${movie.watchedAt}`}
               className="group bg-gradient-to-b from-gray-900/50 to-gray-900/20 backdrop-blur-sm rounded-2xl border border-gray-800/50 
                        overflow-hidden hover:border-blue-500/30 transition-all duration-500 transform hover:-translate-y-2
                        shadow-xl hover:shadow-blue-900/20"
@@ -179,12 +247,22 @@ export default function WatchList() {
 
                 {/* ACTION BUTTONS */}
                 <div className="flex gap-2 mt-4">
-                  <button className="flex-1 py-2.5 bg-gradient-to-r from-gray-900/50 to-gray-900/20 border border-gray-800 
-                           rounded-lg hover:border-blue-500/30 hover:bg-gray-800/50 transition-all duration-300 text-sm">
-                    Watch Again
+                  <button 
+                    onClick={() => handleWatchAgain(movie)}
+                    className="flex-1 py-2.5 bg-gradient-to-r from-gray-900/50 to-gray-900/20 border border-gray-800 
+                           rounded-lg hover:border-blue-500/30 hover:bg-gray-800/50 transition-all duration-300 
+                           text-sm flex items-center justify-center gap-2"
+                  >
+                    <Play className="w-3 h-3" />
+                    Play Again
                   </button>
-                  <button className="px-4 py-2.5 bg-gradient-to-r from-red-900/20 to-red-900/10 border border-red-800/30 
-                           rounded-lg hover:border-red-700/50 hover:bg-red-900/30 transition-all duration-300 text-sm">
+                  <button 
+                    onClick={() => handleRemoveMovie(movie.id)}
+                    className="px-4 py-2.5 bg-gradient-to-r from-red-900/20 to-red-900/10 border border-red-800/30 
+                           rounded-lg hover:border-red-700/50 hover:bg-red-900/30 transition-all duration-300 
+                           text-sm flex items-center justify-center gap-2"
+                  >
+                    <Trash2 className="w-3 h-3" />
                     Remove
                   </button>
                 </div>
@@ -216,7 +294,7 @@ export default function WatchList() {
                 <div>
                   <div className="text-sm text-gray-400">Total Hours</div>
                   <div className="text-2xl font-bold text-white">
-                    {Math.round(history.reduce((acc, movie) => acc + (movie.duration || 0), 0) / 60)}h
+                    {totalHours}h
                   </div>
                 </div>
               </div>
@@ -230,8 +308,8 @@ export default function WatchList() {
                 <div>
                   <div className="text-sm text-gray-400">Last Watched</div>
                   <div className="text-lg font-bold text-white">
-                    {history.length > 0 
-                      ? new Date(history[0].watchedAt).toLocaleDateString('en-US', { 
+                    {lastWatched 
+                      ? new Date(lastWatched.watchedAt).toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric' 
                         })
@@ -242,12 +320,44 @@ export default function WatchList() {
             </div>
           </div>
 
-          {/* CLEAR HISTORY BUTTON */}
-          <div className="mt-8 text-center">
-            <button className="px-6 py-3 bg-gradient-to-r from-gray-900/50 to-gray-900/20 border border-gray-800 
-                     rounded-xl hover:border-red-500/30 hover:bg-red-900/20 transition-all duration-300">
+          {/* ACTION BUTTONS */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button 
+              onClick={handleClearHistory}
+              className="px-6 py-3 bg-gradient-to-r from-red-900/20 to-red-900/10 border border-red-800/30 
+                     rounded-xl hover:border-red-700/50 hover:bg-red-900/30 transition-all duration-300
+                     flex items-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
               Clear All History
             </button>
+            
+            <button 
+              onClick={handleRefresh}
+              className="px-6 py-3 bg-gradient-to-r from-blue-900/20 to-blue-900/10 border border-blue-800/30 
+                     rounded-xl hover:border-blue-700/50 hover:bg-blue-900/30 transition-all duration-300
+                     flex items-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Refresh Now
+            </button>
+            
+            <Link
+              to="/"
+              className="px-6 py-3 bg-gradient-to-r from-gray-900/50 to-gray-900/20 border border-gray-800 
+                     rounded-xl hover:border-green-500/30 hover:bg-gray-800/50 transition-all duration-300
+                     flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4 rotate-180" />
+              Watch More
+            </Link>
+          </div>
+
+          {/* LAST UPDATE INFO */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-gray-500">
+              Data auto-refreshes every 3 seconds • Last update: {formatLastUpdate()}
+            </p>
           </div>
         </div>
       </div>
