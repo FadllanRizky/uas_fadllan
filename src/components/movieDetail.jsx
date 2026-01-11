@@ -25,6 +25,7 @@ export default function MovieDetailModal({ movie, onClose, isMobile = false }) {
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   /* LOAD DATA SAAT MODAL BUKA */
   useEffect(() => {
@@ -36,15 +37,17 @@ export default function MovieDetailModal({ movie, onClose, isMobile = false }) {
 
     // Auto-save to history when modal opens
     saveToHistory();
+    setLoaded(true);
   }, []);
 
   /* SIMPAN KE LOCALSTORAGE */
   useEffect(() => {
+    if(!loaded)return;
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ likes, comments })
     );
-  }, [likes, comments]);
+  }, [likes, comments,loaded]);
 
   /* LIKE */
   const handleLike = () => {
